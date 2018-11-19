@@ -1,0 +1,21 @@
+<h2 class="content-subhead">Search</h2>
+
+<form action="/search" method="get">
+  <input name="query" value="<%= params[:query] %>">
+  <button type="submit">Search</button>
+</form>
+
+<% if @value %>
+  <% if !@results.empty? %>
+    <h2>Results for '<%= @value %>'</h2>
+      <ul>
+        <% @result_titles.each do |chap_num, title| %>
+          <li>
+            <a href="/chapters/<%= chap_num %>" ><%= title %></a>
+          </li>
+        <% end %>
+      </ul>
+  <% else %>
+    <h4>Sorry, no matches were found.</h4>
+  <% end %>
+<% end %>

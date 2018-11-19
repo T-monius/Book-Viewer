@@ -1,0 +1,102 @@
+# notes.txt
+
+Route Parameters
+  - 4 : Display each chapter's title on the chapter page and in
+    the page's title. 
+    + Currently iterating the `@contents` array of files from
+      the `data` folder in the `home.erb` folder. Displaying
+      the index by an offset of 1 at iteration.
+    + Instead, can store the associated chapter number with the
+      title from the outset by iterating `@contents` in `book_
+      viewer.rb` and creating a hash with the chapter number as
+      the key, and the chapter title as the value
+    + Access the chapter title through the number of the
+      parameter to create the `@title` instance variable.
+    + Iterate the hash instead of `@contents` in `home.erb`
+
+View Helpers
+  - (1) Wrap non-empty lines in `<p>` tags
+    + A line can be determined based on where there are line
+      breaks.
+    + Could use `File::readlines` and then add the `<p>` tags
+      > Iterate array and add tags
+      > Join
+    + Where do I place my `in_paragraphs`
+      > Within `helpers` method in the main application
+      > Call it in the `chapter.erb` file.
+    + What do I do with double "\n"?
+      > Should this really be where I place my `<p>` tags
+        and here only?
+      > If there is a regex match for a double break, chomp
+        and add the html `<p>` tags
+    + Can use `String#gsub` to replace line
+      breaks with `<p>` tags.
+      > I can isolate the line breaks this way, but I need to
+        alternate an opening bracket w/ a closing
+
+Search Form
+  - The search form depends on the `params` hash
+    + The user's query is stored in the params hash
+    + Can check that something was input by simply re-
+      displaying it to the user /
+      > Store as an instance variable (@value) / 
+      > Use erb syntax to display it if available /
+      > If no query value, then do nothing /
+    + Matches
+      > Take the query value 
+      > Search each chapter to see if there is a match for the
+        value string
+        = Call `File::read` only on chapters that start w/
+          'chp' a number then the extension '.txt'
+        = `Dir::[]` will take a string which can take some
+          wildcard type flags
+        = Array `chapter_files`
+      > Iterate through chapter files in `data`
+        = Do I use a simple loop in `get "/search"`?
+        = Add the chapter number to an array if it is a match
+          for the query value (Regex)
+        = Associate chapter file with it's name
+          - Get the appropriate title from `contents`
+      > Helper method?
+        = Can I call one of these helper methods in the app
+          file?
+        = Do I need to create an helper method outside of the
+          helper block in order to call it inside of the app
+          file?
+        = Test the method by creating a dummy to simply return
+          something arbitrary.
+    + Nested if
+      > Display a list of matches if there is a result
+        = Matches should be links to the chapters
+      > Display no match if there is no result
+
+Improve Search
+  - List Chapters
+    + Paragraphs
+      > How do I identify a paragraph?
+      > Use my list of matches
+        = Iterate an individual file by paragraphs
+        = `select_paragraph` method?
+          - `String#Split` by '\n\n'
+          - Returns an array of paragraphs
+          - Call it's block for match criteria
+          - If a paragraphs contains a match, it's selected
+      > When do I call `select_paragraph`?
+        = While iterating chapters?
+        = When I call the contént's include on the paragraphs
+    + Sub-list
+      > Each match linked
+      > `id` for linking
+        = Is this supposed to be done dynamically, or should
+          these `id`s be hardcoded?
+        = The note explained something about a DOM element and
+          a #...
+        = The HTML element that displays the content should
+          contain an `id`
+        = A link in the `a` attribute (`href`) should contain
+          the URL with a hash tag.
+        = The current link takes the user to the list of 
+  - (2) Highlight the matches in the display
+    + When I display the paragraph to the results page, I can
+      use `gsub` to replace 'search item' with '<strong>search
+      item</strong>'
